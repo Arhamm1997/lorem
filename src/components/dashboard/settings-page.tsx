@@ -7,11 +7,13 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Save, Settings as SettingsIcon } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 
 export default function SettingsPage() {
   const { toast } = useToast();
+  
+  // Check initial theme from document
   const [settings, setSettings] = useState({
     autoSave: true,
     notifications: true,
@@ -22,6 +24,41 @@ export default function SettingsPage() {
     defaultMaxPages: 100,
     defaultMaxDepth: 3,
   });
+
+  // Load settings from localStorage on mount
+  useEffect(() => {
+    const savedSettings = localStorage.getItem('loremSleuthSettings');
+    if (savedSettings) {
+      try {
+        const parsed = JSON.parse(savedSettings);
+        setSettings(parsed);
+      } catch (e) {
+        console.error('Failed to load settings:', e);
+      }
+    }
+    
+    // Check current theme
+    const isDark = document.documentElement.classList.contains('dark');
+    setSettings(prev => ({ ...prev, darkMode: isDark }));
+  }, []);
+
+  // Toggle dark mode
+  const toggleDarkMode = (checked: boolean) => {
+    setSettings({ ...settings, darkMode: checked });
+    
+    if (checked) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+    
+    toast({
+      title: checked ? "Dark Mode Enabled" : "Light Mode Enabled",
+      description: "Theme has been updated.",
+    });
+  };
 
   const handleSave = () => {
     // Save to localStorage
@@ -93,7 +130,7 @@ export default function SettingsPage() {
               <Switch
                 id="dark-mode"
                 checked={settings.darkMode}
-                onCheckedChange={(checked) => setSettings({ ...settings, darkMode: checked })}
+                onCheckedChange={toggleDarkMode}
               />
             </div>
           </CardContent>
