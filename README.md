@@ -1,4 +1,4 @@
-# Lorem Sleuth
+# Lorem Sleuth By ARHAM
 
 A sophisticated web crawler application that detects lorem ipsum placeholder text across entire websites. Built with Next.js, Google Genkit AI, and modern React components.
 
@@ -134,4 +134,4 @@ Contributions are welcome! Feel free to submit issues and pull requests.
 
 ---
 
-Built with ❤️ using Next.js and Google Genkit AI
+Built with ❤️ by ARHAM using Next.js and Google Genkit AI

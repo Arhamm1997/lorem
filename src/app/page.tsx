@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { FileClock, LayoutGrid, Settings } from "lucide-react";
+import { FileClock, LayoutGrid, Settings, BookOpen } from "lucide-react";
 
 import {
   Sidebar,
@@ -29,8 +29,9 @@ import DashboardContent from "@/components/dashboard/dashboard-content";
 import CrawlHistory from "@/components/dashboard/crawl-history";
 import CrawlHistoryCard from "@/components/dashboard/crawl-history-card";
 import SettingsPage from "@/components/dashboard/settings-page";
+import HowToUsePage from "@/components/dashboard/how-to-use-page";
 
-type AppState = "idle" | "crawling" | "results" | "history" | "settings";
+type AppState = "idle" | "crawling" | "results" | "history" | "settings" | "how-to-use";
 
 export default function DashboardPage() {
   const [appState, setAppState] = React.useState<AppState>("idle");
@@ -168,6 +169,8 @@ export default function DashboardPage() {
         );
       case "settings":
         return <SettingsPage />;
+      case "how-to-use":
+        return <HowToUsePage />;
       case "idle":
       default:
         return <CrawlForm onCrawlStart={handleCrawlStart} />;
@@ -181,7 +184,7 @@ export default function DashboardPage() {
           <div className="flex w-full items-center gap-2 p-2 group-data-[collapsible=icon]:justify-center">
             <Logo className="size-7 shrink-0" />
             <span className="text-lg font-semibold group-data-[collapsible=icon]:hidden">
-              Lorem Sleuth
+              Lorem Sleuth By ARHAM
             </span>
           </div>
         </SidebarHeader>
@@ -189,12 +192,22 @@ export default function DashboardPage() {
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton
-                isActive={appState !== 'history' && appState !== 'settings'}
+                isActive={appState !== 'history' && appState !== 'settings' && appState !== 'how-to-use'}
                 onClick={() => setAppState('idle')}
                 tooltip={{ children: "Dashboard" }}
               >
                 <LayoutGrid />
                 <span>Dashboard</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                isActive={appState === 'how-to-use'}
+                onClick={() => setAppState('how-to-use')}
+                tooltip={{ children: "How to Use" }}
+              >
+                <BookOpen />
+                <span>How to Use</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>

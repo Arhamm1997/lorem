@@ -3,7 +3,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 
 export const metadata: Metadata = {
-  title: 'Lorem Sleuth',
+  title: 'Lorem Sleuth By ARHAM',
   description: 'Detect lorem ipsum text across entire websites with advanced crawling capabilities.',
 };
 
