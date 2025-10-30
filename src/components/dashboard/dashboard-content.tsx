@@ -2,6 +2,7 @@ import type { CrawlResult } from "@/lib/types";
 import StatsCards from "./stats-cards";
 import CrawlCharts from "./crawl-charts";
 import ResultsTable from "./results-table";
+import LoremPagesList from "./lorem-pages-list";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface DashboardContentProps {
@@ -27,6 +28,7 @@ export default function DashboardContent({ crawlResult }: DashboardContentProps)
           </Card>
         </div>
       </div>
+      <LoremPagesList pages={crawlResult.pages} />
     </div>
   );
 }

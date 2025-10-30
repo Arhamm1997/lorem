@@ -91,24 +91,45 @@ export function AppHeader({ onNewCrawl, crawlResult }: AppHeaderProps) {
       csvLines.push(row.join(','));
     });
     
-    // Lorem Snippets Section (for pages with lorem)
-    const loremPages = crawlResult.pages.filter(p => p.status === 'lorem' && p.snippets.length > 0);
+    // Pages with Lorem Ipsum Section
+    const loremPages = crawlResult.pages.filter(p => p.status === 'lorem');
     if (loremPages.length > 0) {
       csvLines.push('');
-      csvLines.push('=== LOREM IPSUM SNIPPETS ===');
+      csvLines.push('=== PAGES WITH LOREM IPSUM ===');
+      csvLines.push('Page #,URL,Lorem Count,Page Title,First Occurrence Line');
+      
+      loremPages.forEach((page, index) => {
+        const firstLine = page.snippets.length > 0 ? page.snippets[0].lineNumber : 'N/A';
+        const row = [
+          (index + 1).toString(),
+          `"${page.url}"`,
+          page.loremCount.toString(),
+          `"${page.title.replace(/"/g, '""')}"`,
+          firstLine.toString()
+        ];
+        csvLines.push(row.join(','));
+      });
+    }
+    
+    // Lorem Snippets Section (for pages with lorem)
+    if (loremPages.length > 0) {
+      csvLines.push('');
+      csvLines.push('=== LOREM IPSUM SNIPPETS (Detailed) ===');
       csvLines.push('URL,Line Number,Context Before,Lorem Text,Context After');
       
       loremPages.forEach(page => {
-        page.snippets.forEach(snippet => {
-          const row = [
-            `"${page.url}"`,
-            snippet.lineNumber.toString(),
-            `"${snippet.contextBefore.substring(0, 50).replace(/"/g, '""')}"`,
-            `"${snippet.loremText.replace(/"/g, '""')}"`,
-            `"${snippet.contextAfter.substring(0, 50).replace(/"/g, '""')}"`
-          ];
-          csvLines.push(row.join(','));
-        });
+        if (page.snippets.length > 0) {
+          page.snippets.forEach(snippet => {
+            const row = [
+              `"${page.url}"`,
+              snippet.lineNumber.toString(),
+              `"${snippet.contextBefore.substring(0, 50).replace(/"/g, '""')}"`,
+              `"${snippet.loremText.replace(/"/g, '""')}"`,
+              `"${snippet.contextAfter.substring(0, 50).replace(/"/g, '""')}"`
+            ];
+            csvLines.push(row.join(','));
+          });
+        }
       });
     }
     
