@@ -39,6 +39,7 @@ export default function DashboardPage() {
   const [crawlHistory, setCrawlHistory] = React.useState<CrawlResult[]>([]);
   const [progress, setProgress] = React.useState(0);
   const [pagesScanned, setPagesScanned] = React.useState(0);
+  const [loremPagesFound, setLoremPagesFound] = React.useState(0);
   const { toast } = useToast();
 
   // Load history from localStorage on mount
@@ -64,6 +65,7 @@ export default function DashboardPage() {
     setAppState("crawling");
     setProgress(0);
     setPagesScanned(0);
+    setLoremPagesFound(0);
     setCrawlResult(null);
 
     const maxPages = config.maxPages;
@@ -77,6 +79,11 @@ export default function DashboardPage() {
       if (shouldIncrement && pagesCount < maxPages) {
         pagesCount++;
         setPagesScanned(pagesCount);
+        
+        // Simulate finding pages with lorem ipsum (30% chance)
+        if (Math.random() < 0.3) {
+          setLoremPagesFound(prev => prev + 1);
+        }
         
         // Update progress based on pages crawled
         const progressPercent = Math.min((pagesCount / maxPages) * 90, 90);
@@ -99,11 +106,12 @@ export default function DashboardPage() {
       clearInterval(crawlSimulation);
       setProgress(100);
       setPagesScanned(result.summary.totalPages);
+      setLoremPagesFound(result.summary.loremPages);
       setCrawlResult(result);
       setAppState("results");
       setCrawlHistory(prev => [result, ...prev]);
     } catch (error) {
-        clearInterval(interval);
+        clearInterval(crawlSimulation);
         console.error("Crawl failed:", error);
         toast({
             variant: "destructive",
@@ -119,6 +127,7 @@ export default function DashboardPage() {
     setCrawlResult(null);
     setProgress(0);
     setPagesScanned(0);
+    setLoremPagesFound(0);
   };
 
   const handleHistorySelect = (result: CrawlResult) => {
@@ -136,7 +145,7 @@ export default function DashboardPage() {
   const renderContent = () => {
     switch (appState) {
       case "crawling":
-        return <CrawlProgress progress={progress} pagesScanned={pagesScanned} />;
+        return <CrawlProgress progress={progress} pagesScanned={pagesScanned} loremPagesFound={loremPagesFound} />;
       case "results":
         return crawlResult ? <DashboardContent crawlResult={crawlResult} /> : null;
       case "history":
